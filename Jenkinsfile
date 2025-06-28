@@ -34,7 +34,7 @@ pipeline {
 
         stage('Update deployment version') {
             steps {
-                bat 'powershell -Command "(Get-Content deployment.yaml) -replace \'\\{\\{VERSION\\}\\}\', \'%BUILD_TIMESTAMP%\' | Set-Content deployment.yaml"'
+                bat 'powershell -Command "(Get-Content deployment.yaml -Raw) -replace \'\\{\\{VERSION\\}\\}\', \'%BUILD_TIMESTAMP%\' | Out-File deployment.yaml -Encoding utf8"'
             }
         }        
 
