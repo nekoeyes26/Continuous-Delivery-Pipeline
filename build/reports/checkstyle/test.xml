@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="8.37">
+<file name="D:\Kuliah\Semester 8\Integrative Programming\New folder (2)\Continuous-Delivery-With-Docker-and-Jenkins-3rd-Edition\Chapter08\sample1\src\test\java\acceptance\AcceptanceTest.java">
+</file>
+<file name="D:\Kuliah\Semester 8\Integrative Programming\New folder (2)\Continuous-Delivery-With-Docker-and-Jenkins-3rd-Edition\Chapter08\sample1\src\test\java\acceptance\StepDefinitions.java">
+</file>
+<file name="D:\Kuliah\Semester 8\Integrative Programming\New folder (2)\Continuous-Delivery-With-Docker-and-Jenkins-3rd-Edition\Chapter08\sample1\src\test\java\com\leszko\calculator\CalculatorTest.java">
+</file>
+<file name="D:\Kuliah\Semester 8\Integrative Programming\New folder (2)\Continuous-Delivery-With-Docker-and-Jenkins-3rd-Edition\Chapter08\sample1\src\test\java\smoke\SmokeTest.java">
+</file>
+</checkstyle>

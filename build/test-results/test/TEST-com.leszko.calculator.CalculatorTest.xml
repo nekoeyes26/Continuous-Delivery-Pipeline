@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.leszko.calculator.CalculatorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2025-06-27T19:58:26" hostname="AEONYX-PC" time="3.008">
+  <properties/>
+  <testcase name="testSum" classname="com.leszko.calculator.CalculatorTest" time="3.008"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
