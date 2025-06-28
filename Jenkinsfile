@@ -3,88 +3,67 @@ pipeline {
 
     environment {
         BUILD_TIMESTAMP = new Date().format("yyyyMMdd-HHmm")
+        DOCKER_IMAGE = "aeonyx/calculator"
     }
 
     triggers {
-        pollSCM('* * * * *')
+        pollSCM('* * * * *') // polling Git setiap menit
     }
 
     stages {
-        stage("Compile") {
-            steps {
-                bat 'gradlew.bat compileJava'
-            }
-        }
-
-        stage("Unit test") {
-            steps {
-                bat 'gradlew.bat test'
-            }
-        }
-
-        stage("Code coverage") {
-            steps {
-                bat 'gradlew.bat jacocoTestReport'
-                bat 'gradlew.bat jacocoTestCoverageVerification'
-            }
-        }
-
-        stage("Static code analysis") {
-            steps {
-                bat 'gradlew.bat checkstyleMain'
-            }
-        }
-
-        stage("Package") {
+        stage('Build') {
             steps {
                 bat 'gradlew.bat build'
             }
         }
 
-        stage("Docker build") {
+        stage('Docker Login & Build') {
             steps {
-                bat 'docker build -t aeonyx/calculator:%BUILD_TIMESTAMP% .'
+                withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    bat 'docker login -u %DOCKER_USER% -p %DOCKER_PASS%'
+                    bat 'docker build -t %DOCKER_IMAGE%:%BUILD_TIMESTAMP% .'
+                }
             }
         }
 
-        stage("Docker push") {
+        stage('Docker Push') {
             steps {
-                bat 'docker push aeonyx/calculator:%BUILD_TIMESTAMP%'
+                bat 'docker push %DOCKER_IMAGE%:%BUILD_TIMESTAMP%'
             }
         }
 
-        stage("Update version") {
+        stage('Update deployment version') {
             steps {
                 bat 'powershell -Command "(Get-Content deployment.yaml) -replace \'\\{\\{VERSION\\}\\}\', \'%BUILD_TIMESTAMP%\' | Set-Content deployment.yaml"'
             }
         }
 
-        stage("Deploy to staging") {
+        stage('Deploy to Staging') {
             steps {
-                bat 'kubectl config use-context staging'
+                bat 'kubectl config use-context minikube-staging'
                 bat 'kubectl apply -f hazelcast.yaml'
                 bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
             }
         }
 
-        stage("Acceptance test") {
+        stage('Acceptance Test (Staging)') {
             steps {
                 sleep time: 60, unit: 'SECONDS'
                 bat 'acceptance-test.bat'
             }
         }
 
-        stage("Release to production") {
+        stage('Deploy to Production') {
             steps {
-                bat 'kubectl config use-context production'
+                bat 'kubectl config use-context minikube-production'
                 bat 'kubectl apply -f hazelcast.yaml'
                 bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
             }
         }
 
-        stage("Smoke test") {
+        stage('Smoke Test (Production)') {
             steps {
                 sleep time: 60, unit: 'SECONDS'
                 bat 'smoke-test.bat'
