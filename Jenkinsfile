@@ -38,6 +38,16 @@ pipeline {
             }
         }
 
+        stage('Debug Env') {
+          steps {
+               bat 'echo %KUBECONFIG%'
+               bat 'kubectl config get-contexts'
+               bat 'kubectl config use-context minikube-staging'
+               bat 'kubectl cluster-info'
+          }
+        }
+
+
         stage('Deploy to Staging') {
             steps {
                 bat 'kubectl config use-context staging'
