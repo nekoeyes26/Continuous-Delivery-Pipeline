@@ -15,7 +15,7 @@ spec:
         app: calculator
     spec:
       containers:
-      - name: calculator
-        image: leszko/calculator:{{VERSION}}
-        ports:
-        - containerPort: 8080
+        - name: calculator
+          image: aeonyx/calculator:{{VERSION}}
+          ports:
+            - containerPort: 8080

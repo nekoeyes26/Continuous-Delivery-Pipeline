@@ -23,17 +23,9 @@ if "%NODE_PORT%"=="" (
     exit /b 1
 )
 
-set CALCULATOR_URL=http://%NODE_IP%:%NODE_PORT%
-echo Testing connection to %CALCULATOR_URL% ...
-curl -s -o nul -w "%%{http_code}" %CALCULATOR_URL% > tmp_response.txt
+echo Getting public service URL from minikube...
+for /f "delims=" %%u in ('minikube -p %PROFILE% service calculator-service --url') do set CALCULATOR_URL=%%u
+echo CALCULATOR_URL=%CALCULATOR_URL%
 
-set /p RESPONSE=<tmp_response.txt
-echo HTTP response: %RESPONSE%
-
-if "%RESPONSE%" NEQ "200" (
-    echo ERROR: Calculator service is not responding at %CALCULATOR_URL%
-    exit /b 1
-)
-
-echo Running acceptance test on %CALCULATOR_URL%
+echo Running acceptance test against %CALCULATOR_URL%
 gradlew.bat acceptanceTest "-Dcalculator.url=%CALCULATOR_URL%"
