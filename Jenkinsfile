@@ -40,7 +40,7 @@ pipeline {
 
         stage('Deploy to Staging') {
             steps {
-                bat 'kubectl config use-context minikube-staging'
+                bat 'kubectl config use-context staging'
                 bat 'kubectl apply -f hazelcast.yaml'
                 bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
@@ -56,7 +56,7 @@ pipeline {
 
         stage('Deploy to Production') {
             steps {
-                bat 'kubectl config use-context minikube-production'
+                bat 'kubectl config use-context production'
                 bat 'kubectl apply -f hazelcast.yaml'
                 bat 'kubectl apply -f deployment.yaml'
                 bat 'kubectl apply -f service.yaml'
