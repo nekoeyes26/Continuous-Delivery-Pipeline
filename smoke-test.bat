@@ -1,7 +1,7 @@
 @echo off
 REM Menentukan profil production
 set PROFILE=production
-set CONTEXT=minikube-%PROFILE%
+set CONTEXT=%PROFILE%
 
 REM Ambil IP cluster production
 for /f "delims=" %%i in ('minikube -p %PROFILE% ip') do set NODE_IP=%%i

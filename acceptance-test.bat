@@ -1,7 +1,7 @@
 @echo off
 REM Menentukan profil staging
 set PROFILE=staging
-set CONTEXT=minikube-%PROFILE%
+set CONTEXT=%PROFILE%
 
 REM Ambil IP cluster staging
 for /f "delims=" %%i in ('minikube -p %PROFILE% ip') do set NODE_IP=%%i
