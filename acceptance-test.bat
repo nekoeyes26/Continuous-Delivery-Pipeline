@@ -10,7 +10,7 @@ REM Ubah context kubectl agar mengarah ke staging
 kubectl config use-context %CONTEXT%
 
 REM Ambil port service dari staging
-for /f "delims=" %%j in ('kubectl get svc calculator-service -o=jsonpath="{.spec.ports[0].nodePort}"') do set NODE_PORT=%%j
+for /f "delims=" %%j in ('kubectl get svc calculator-service -o "jsonpath={.spec.ports[0].nodePort}"') do set NODE_PORT=%%j
 
 REM Jalankan acceptance test
-gradlew.bat acceptanceTest -Dcalculator.url=http://%NODE_IP%:%NODE_PORT%
+gradlew.bat acceptanceTest "-Dcalculator.url=http://%NODE_IP%:%NODE_PORT%"
