@@ -5,6 +5,12 @@ set CONTEXT=%PROFILE%
 echo Switching kubectl context to %CONTEXT%...
 kubectl config use-context %CONTEXT%
 
+minikube status -p %PROFILE% | findstr "Running" >nul
+if errorlevel 1 (
+    echo Minikube not running. Starting...
+    minikube start -p %PROFILE%
+)
+
 echo Getting Minikube IP for profile: %PROFILE%...
 for /f "delims=" %%i in ('minikube -p %PROFILE% ip') do set NODE_IP=%%i
 echo NODE_IP=%NODE_IP%
