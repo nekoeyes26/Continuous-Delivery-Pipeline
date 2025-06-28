@@ -43,13 +43,13 @@ pipeline {
 
         stage("Docker build") {
             steps {
-                bat 'docker build -t leszko/calculator:%BUILD_TIMESTAMP% .'
+                bat 'docker build -t aeonyx/calculator:%BUILD_TIMESTAMP% .'
             }
         }
 
         stage("Docker push") {
             steps {
-                bat 'docker push leszko/calculator:%BUILD_TIMESTAMP%'
+                bat 'docker push aeonyx/calculator:%BUILD_TIMESTAMP%'
             }
         }
 
