@@ -42,6 +42,33 @@ if "!CALCULATOR_URL!"=="" (
     exit /b 1
 )
 
+:: Port forwarding ke 4444
+start /min cmd /c "kubectl port-forward svc/calculator-service 4444:8080 > portforward.log 2>&1"
+
+:: Tunggu port forwarding siap (maks 20 detik)
+set /a COUNT=0
+:wait_port
+powershell -Command "try { $c = New-Object Net.Sockets.TcpClient; $c.Connect('localhost',4444); $c.Close(); exit 0 } catch { exit 1 }"
+if not errorlevel 1 goto port_ready
+set /a COUNT+=1
+if %COUNT% GEQ 20 (
+    echo ERROR: Port forwarding ke 4444 gagal!
+    exit /b 1
+)
+timeout /t 1 >nul
+goto wait_port
+:port_ready
+
+set CALCULATOR_URL=http://localhost:4444
+
+echo CALCULATOR_URL=!CALCULATOR_URL!
+
+:: Extra check for special characters or empty value
+if "!CALCULATOR_URL!"=="" (
+    echo ERROR: CALCULATOR_URL is empty!
+    exit /b 1
+)
+
 :: Run acceptance test
 echo Running acceptance test against !CALCULATOR_URL!
 call gradlew.bat acceptanceTest -Dcalculator.url=!CALCULATOR_URL!
