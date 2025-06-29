@@ -41,7 +41,7 @@ start /min cmd /c "kubectl port-forward svc/calculator-service 4445:8080 > portf
 :: Tunggu port forwarding siap (maks 20 detik)
 set /a COUNT=0
 :wait_port
-powershell -Command "try { $c = New-Object Net.Sockets.TcpClient; $c.Connect('localhost',4445); $c.Close(); exit 0 } catch { exit 1 }"
+curl -s http://localhost:4445/health >nul 2>&1
 if not errorlevel 1 goto port_ready
 set /a COUNT+=1
 if %COUNT% GEQ 20 (
