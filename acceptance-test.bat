@@ -40,8 +40,11 @@ if "%CALCULATOR_URL%"=="" (
 )
 
 REM --- Test koneksi (opsional) ---
-curl -s -o nul -w "%{http_code}" "%CALCULATOR_URL%" > tmp_response.txt
-set /p RESPONSE=<tmp_response.txt
+REM Gunakan curl -I untuk mendapatkan status code di Windows
+curl -s -I "%CALCULATOR_URL%" > tmp_response.txt
+set RESPONSE=
+for /f "tokens=2 delims= " %%a in ('findstr /i "HTTP/" tmp_response.txt') do set RESPONSE=%%a
+
 echo HTTP response: %RESPONSE%
 if NOT "%RESPONSE%"=="200" (
     echo ERROR: Service not responding
