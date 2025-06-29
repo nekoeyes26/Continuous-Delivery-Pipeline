@@ -40,7 +40,7 @@ if "%CALCULATOR_URL%"=="" (
 )
 
 REM --- Test koneksi (opsional) ---
-curl -s -o nul -w "%%{http_code}" "%CALCULATOR_URL%" > tmp_response.txt
+curl -s -o nul -w "%{http_code}" "%CALCULATOR_URL%" > tmp_response.txt
 set /p RESPONSE=<tmp_response.txt
 echo HTTP response: %RESPONSE%
 if NOT "%RESPONSE%"=="200" (
