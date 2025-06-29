@@ -30,16 +30,8 @@ if "!NODE_PORT!"=="" (
     exit /b 1
 )
 
-set CALCULATOR_URL=
-for /f "delims=" %%u in ('minikube -p %PROFILE% service calculator-service --url 2^>nul') do set CALCULATOR_URL=%%u
-
-:: Validasi jika CALCULATOR_URL tidak diawali http (bukan URL valid)
-if not "!CALCULATOR_URL:~0,4!"=="http" (
-    echo ERROR: Minikube service tidak mengembalikan URL yang valid.
-    echo Output: !CALCULATOR_URL!
-    echo Pastikan minikube profile %PROFILE% sudah berjalan.
-    exit /b 1
-)
+:: Rakit URL langsung dari IP dan NodePort
+set CALCULATOR_URL=http://!NODE_IP!:!NODE_PORT!
 
 :: Debug CALCULATOR_URL
 echo CALCULATOR_URL=!CALCULATOR_URL!
