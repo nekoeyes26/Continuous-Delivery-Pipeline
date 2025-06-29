@@ -26,6 +26,15 @@ if "!NODE_PORT!"=="" (
     exit /b 1
 )
 
+set CALCULATOR_URL=http://!NODE_IP!:!NODE_PORT!
+echo CALCULATOR_URL=!CALCULATOR_URL!
+
+:: Extra check for special characters or empty value
+if "!CALCULATOR_URL!"=="" (
+    echo ERROR: CALCULATOR_URL is empty!
+    exit /b 1
+)
+
 :: Port forwarding ke 4445
 start /min cmd /c "kubectl port-forward svc/calculator-service 4445:8080 > portforward.log 2>&1"
 
@@ -53,5 +62,5 @@ if "!CALCULATOR_URL!"=="" (
 )
 
 echo Running smoke test against !CALCULATOR_URL!
-curl -s !CALCULATOR_URL!/health || exit /b 1
+call gradlew.bat smokeTest -Dcalculator.url=!CALCULATOR_URL!
 endlocal
