@@ -8,7 +8,10 @@ echo [DEBUG] Starting smoke-test.bat
 echo Switching kubectl context to %CONTEXT%...
 kubectl config use-context %CONTEXT%
 
-:: Port forwarding ke 4445 (background)
+:: Kill any process using port 4445 (cleanup)
+for /f "tokens=5" %%p in ('netstat -ano ^| findstr :4445') do taskkill /F /PID %%p >nul 2>&1
+
+echo Starting port-forward to 4445...
 start /min "" cmd /c "kubectl port-forward svc/calculator-service 4445:8080 > portforward.log 2>&1"
 
 :: Tunggu port forwarding siap (maks 20 detik)
@@ -19,12 +22,15 @@ if not errorlevel 1 goto port_ready
 set /a COUNT+=1
 if %COUNT% GEQ 20 (
     echo ERROR: Port forwarding ke 4445 gagal!
+    echo --- portforward.log ---
+    type portforward.log
     exit /b 1
 )
 timeout /t 1 >nul
 goto wait_port
 :port_ready
 
+echo Port forwarding ke 4445 berhasil.
 set CALCULATOR_URL=http://localhost:4445
 
 echo CALCULATOR_URL=!CALCULATOR_URL!
