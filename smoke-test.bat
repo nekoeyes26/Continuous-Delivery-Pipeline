@@ -8,7 +8,9 @@ echo [DEBUG] Starting smoke-test.bat
 echo Switching kubectl context to %CONTEXT%...
 kubectl config use-context %CONTEXT%
 
-:: Kill any process using port 4445 (cleanup)
+:: Kill any process using port 4444 (cleanup acceptance test)
+for /f "tokens=5" %%p in ('netstat -ano ^| findstr :4444') do taskkill /F /PID %%p >nul 2>&1
+:: Kill any process using port 4445 (cleanup smoke test)
 for /f "tokens=5" %%p in ('netstat -ano ^| findstr :4445') do taskkill /F /PID %%p >nul 2>&1
 
 echo Starting port-forward to 4445...
