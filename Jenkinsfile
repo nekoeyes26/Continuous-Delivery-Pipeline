@@ -53,6 +53,16 @@ pipeline {
             }
         }
 
+        stage('Verify Environment') {
+          steps {
+               bat 'minikube profile list'
+               bat 'kubectl config get-contexts'
+               bat 'kubectl cluster-info'
+               bat 'minikube status -p staging'
+               bat 'minikube status -p production'
+          }
+        }
+
         stage('Acceptance Test (Staging)') {
             steps {
                 sleep time: 60, unit: 'SECONDS'
