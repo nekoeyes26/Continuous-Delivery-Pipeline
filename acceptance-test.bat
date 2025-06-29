@@ -33,11 +33,12 @@ if "!NODE_PORT!"=="" (
 set CALCULATOR_URL=
 for /f "delims=" %%u in ('minikube -p %PROFILE% service calculator-service --url 2^>nul') do set CALCULATOR_URL=%%u
 
-if "!CALCULATOR_URL!"=="" (
-    echo minikube --url failed, falling back to IP + NodePort
-    for /f "delims=" %%i in ('minikube -p %PROFILE% ip') do set NODE_IP=%%i
-    for /f "delims=" %%j in ('kubectl get svc calculator-service -o "jsonpath={.spec.ports[0].nodePort}"') do set NODE_PORT=%%j
-    set CALCULATOR_URL=http://!NODE_IP!:!NODE_PORT!
+:: Validasi jika CALCULATOR_URL tidak diawali http (bukan URL valid)
+if not "!CALCULATOR_URL:~0,4!"=="http" (
+    echo ERROR: Minikube service tidak mengembalikan URL yang valid.
+    echo Output: !CALCULATOR_URL!
+    echo Pastikan minikube profile %PROFILE% sudah berjalan.
+    exit /b 1
 )
 
 :: Debug CALCULATOR_URL
